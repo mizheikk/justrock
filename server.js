@@ -1,0 +1,48 @@
+var express = require('express');
+var sys = require('sys');
+var exec = require('child_process').exec;
+ 
+var server = express();
+server.use(express.static(__dirname + '/public/'));
+
+var port = 8080;
+server.listen(port, function() {
+    console.log('server listening on port ' + port);
+});
+
+server.get('/command', function(req,res) {
+
+  var command = req.query.command;
+  var param = req.query.param;
+  
+  if(command == null)
+  	command = "";
+  if(param == null)
+  	param = "";
+
+  // Välitetään Spotifylle komento
+	if( isValid(command, param) ) {				
+		exec('spotifycontrol ' + command + " " + param, function(err,stdout) {
+			if(err) {
+				res.send(err);
+			}		
+			res.send(stdout);
+		});
+	}
+	else 
+		res.send("False command.");  
+});
+
+//Tarkastetaan syöte
+function isValid(command, param) {
+
+	if(command.length < 4 || command.length > 8 || param.length > 50)
+		return false;
+
+	// hyväksyy: command a-z ja param a-Z sekä 0-9	
+	if(command.search(/[^a-z]/) > -1 || param.search(/[^a-z|^0-9|^:]/i) > -1)
+		return false;
+		
+	return true;
+}
+
