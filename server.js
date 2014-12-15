@@ -36,7 +36,7 @@ server.get('/command', function(req,res) {
 //Tarkastetaan syöte
 function isValid(command, param) {
 
-	if(command.length < 4 || command.length > 8 || param.length > 50)
+	if(command.length > 8 || param.length > 50)
 		return false;
 
 	// hyväksyy: command a-z ja param a-Z sekä 0-9	

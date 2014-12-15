@@ -3,7 +3,7 @@ $( document ).ready(function() {
  	var url = "http://localhost:8080/command"; 	
  	var volume = 0;
 	
-	/* Hakee kappaletiedot kerran sekunnissa.
+	/* Hakee kappaletiedot
 	 * TODO hae tiedot vain kun oikeasti tarvitsee..
 	*/
 	
@@ -11,19 +11,17 @@ $( document ).ready(function() {
     $.get(url, { command:"info"}, function(data){
   		var info = $.parseJSON(data);
   		$("#info").html(info.artist + "<br/>" +
-  			              info.track  + "<br/>" +
-  			              info.album  + "<br/>" +
-  			              info.nowAt  
-  		);
-  		
+  			              info.trackName  + "<br/>" +
+  			              info.album  + "<br/>"  
+  		);  		
   		volume = info.volume;
 		});			
 	}
-	setInterval(infoLoop, 1000);
+	setInterval(infoLoop, 5000);
 	
 
 	$("#step-backward").click(function(){
-		$.get(url, { command:"prev"}, function(data){
+		$.get(url, { command:"previous"}, function(data){
 		});
 	});	
 
