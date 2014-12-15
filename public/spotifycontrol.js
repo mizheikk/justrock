@@ -6,7 +6,6 @@ $( document ).ready(function() {
 	/* Hakee kappaletiedot
 	 * TODO hae tiedot vain kun oikeasti tarvitsee..
 	*/
-	
 	function infoLoop() {
     $.get(url, { command:"info"}, function(data){
   		var info = $.parseJSON(data);
@@ -14,7 +13,6 @@ $( document ).ready(function() {
   			              info.trackName  + "<br/>" +
   			              info.album  + "<br/>"  
   		);  		
-  		volume = info.volume;
 		});			
 	}
 	setInterval(infoLoop, 5000);

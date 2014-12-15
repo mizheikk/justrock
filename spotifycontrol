@@ -1,15 +1,28 @@
 #!/usr/bin/env osascript
-
 on run argv
+
+	set appName to "Spotify Controller"
+	set appLanguage to "AppleScript"	
+	set appVersion to "0.5"
+	set targetOS to "OS X"	
+
   if count of argv is equal to 0 then
-    set msg to       "{\"commands\" : [\n"
-    set msg to msg & "  {\"play\":\"\"},\n"
-    set msg to msg & "  {\"pause\":\"\"},\n"
-    set msg to msg & "  {\"next\":\"\"},\n"
-    set msg to msg & "  {\"previous\":\"\"},\n"            
-    set msg to msg & "  {\"volume\":\"int 0-100\"},\n"   
-    set msg to msg & "  {\"info\":\"\"}\n"       
-    set msg to msg & "]}\n"
+    set msg to       "{\n"
+    set msg to msg & "  \"application\": {\n"
+    set msg to msg & "    \"name\":\"" & appName & "\",\n"
+    set msg to msg & "    \"version\":\"" & appVersion & "\",\n"      
+    set msg to msg & "    \"OS\":\"" & targetOS & "\",\n"      
+    set msg to msg & "    \"language\":\"" & appLanguage & "\"\n"      
+    set msg to msg & "   },\n"    
+    set msg to msg & "  \"commands\": [{ \n"
+    set msg to msg & "    \"play\":\"null\",\n"
+    set msg to msg & "    \"pause\":\"null\",\n"
+    set msg to msg & "    \"next\":\"null\",\n"
+    set msg to msg & "    \"previous\":\"null\",\n"            
+    set msg to msg & "    \"volume\":\"int 0-100\",\n"   
+    set msg to msg & "    \"info\":\"null\"\n" 
+    set msg to msg & "   }] \n"      
+    set msg to msg & "}\n"
     return msg
   end if
        
@@ -36,34 +49,58 @@ on run argv
 	    end tell
 	else if command is equal to "info" then
 	  tell application "Spotify"
+	  
+	  	#track
 	    set _artist to artist of current track
 	    set _album to album of current track
-	    set _trackName to name of current track
-	    set _trackNumber to track number of current track
 	    set _diskNumber to disc number of current track
-	    set _duration to duration of current track
-	    set _playedCount to played count of current track
+	    set _duration to duration of current track	
+	    set _playedCount to played count of current track	 
+	    set _trackNumber to track number of current track	   
 	    set _starred to starred of current track
 	    set _popularity to popularity of current track
-	    set _trackId to id of current track
+	    set _trackId to id of current track	     	    	            
+	    set _trackName to name of current track
+	    #set _artwork to artwork of current track
+	    set _albumArtist to album artist of current track   
 	    set _trackUrl to spotify url of current track
+
+			#application
+			#set _currentTrack to current track
+	    set _soundVolume to sound volume
+	    set _playerState to player state
+	    set _playerPosition to player position
+	    set _repeatingEnabled to repeating enabled
+	    set _repeating to repeating
+	    set _shufflingEnabled to shuffling enabled
+	    set _shuffling to shuffling
 	    
-	    set _volume to sound volume
-	    
-	    #json
+	    #json output
 	    set info to        "{\n"
+	    
 	    set info to info & "   \"artist\":\"" & _artist & "\",\n"
 	    set info to info & "   \"album\":\"" & _album & "\",\n"
-	    set info to info & "   \"trackName\":\"" & _trackName & "\",\n"
-	    set info to info & "   \"trackId\":\"" & _trackId & "\",\n"
-	    set info to info & "   \"trackUrl\":\"" & _trackUrl & "\",\n"	    	    
-	    set info to info & "   \"trackNumber\":" & _trackNumber & ",\n"
-	    set info to info & "   \"diskNumber\":" & _diskNumber & ",\n"
-	    set info to info & "   \"duration\":" & _duration & ",\n"
-	    set info to info & "   \"playedCount\":" & _playedCount & ",\n"	    
-	    set info to info & "   \"starred\":" & _starred & ",\n"		    
+	    set info to info & "   \"diskNumber\":" & _diskNumber & ",\n"	  
+	    set info to info & "   \"duration\":" & _duration & ",\n"	  
+	    set info to info & "   \"playedCount\":" & _playedCount & ",\n"	  
+	    set info to info & "   \"trackNumber\":" & _trackNumber & ",\n"	
+	    set info to info & "   \"starred\":" & _starred & ",\n"		
 	    set info to info & "   \"popularity\":" & _popularity & ",\n"
-	    set info to info & "   \"volume\":" & _volume & "\n"	    
+	    set info to info & "   \"trackId\":\"" & _trackId & "\",\n"    	        	        
+	    set info to info & "   \"trackName\":\"" & _trackName & "\",\n"
+	    #set info to info & "   \"artwork\":\"" & _artwork & "\",\n"	
+	    set info to info & "   \"albumArtist\":\"" & _albumArtist & "\",\n"	       
+	    set info to info & "   \"trackUrl\":\"" & _trackUrl & "\",\n"	    	    
+
+			#set info to info & "   \"currentTrack\":\"" & _currentTrack & "\",\n"
+			set info to info & "   \"soundVolume\":\"" & _soundVolume & "\",\n"
+			set info to info & "   \"playerState\":\"" & _playerState & "\",\n"  
+			set info to info & "   \"playerPosition\":\"" & _playerPosition & "\",\n"
+			set info to info & "   \"repeatingEnabled\":\"" & _repeatingEnabled & "\",\n"
+			set info to info & "   \"repeating\":\"" & _repeating & "\",\n"
+			set info to info & "   \"shufflingEnabled\":\"" & _shufflingEnabled & "\",\n"
+			set info to info & "   \"shuffling\":\"" & _shuffling & "\"\n"												    
+    
 	    set info to info & "}\n"	       		
 	  end tell
 	  return info
