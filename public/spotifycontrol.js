@@ -1,57 +1,53 @@
 $( document ).ready(function() {
  	
  	var url = "http://localhost:8080/command"; 	
- 	var volume = 0;
-	
-	/* Hakee kappaletiedot
-	 * TODO hae tiedot vain kun oikeasti tarvitsee..
-	*/
-	function infoLoop() {
+ 	
+ 	/*
+ 	function getInfo() {
     $.get(url, { command:"info"}, function(data){
-  		var info = $.parseJSON(data);
-  		$("#info").html(info.artist + "<br/>" +
-  			              info.trackName  + "<br/>" +
-  			              info.album  + "<br/>"  
-  		);  		
-		});			
-	}
-	setInterval(infoLoop, 5000);
-	
+      var info = $.parseJSON(data);
+      console.log(info.soundVolume);
+      return info;
+    });			
+  }
+  */
+  
+	$("#searchButton").click(function(){	
+	  $.ajax({
+		  url: 'https://api.spotify.com/v1/search',
+			data: {
+			  q: $("#searchQuery").val(),
+				type: 'track'
+			},
+			success: function (response) {
+			  var results = response.tracks.items;
+			  for( i=0; i<results.length; i++) {
+					var uri = response.tracks.items[i].uri;
+					var name = response.tracks.items[i].name;
+					$( "#searchResult" ).append( '<a href="#" class="resultLink" id="' + uri + '">'+ name +'</a> <br/>' );
+			  }   
+			}
+	  });	  		
+	});
+  
+	$(document).on("click", '.resultLink', function(e) {
+		$.get(url, { command:"play", param:e.target.id});
+	});	
 
 	$("#step-backward").click(function(){
-		$.get(url, { command:"previous"}, function(data){
-		});
+		$.get(url, { command:"previous"});
 	});	
 
 	$("#play").click(function(){
-		$.get(url, { command:"play"}, function(data){
-		});
+		$.get(url, { command:"play"});
 	});	
 
 	$("#pause").click(function(){
-		$.get(url, { command:"pause"}, function(data){
-		});
+		$.get(url, { command:"pause"});
 	});	
 	
 	$("#step-forward").click(function(){
-		$.get(url, { command:"next"}, function(data){
-		});
+		$.get(url, { command:"next"});
 	});		
-	
-	$("#volume-down").click(function(){
-		if(volume > 0) {
-			volume = volume - 10;
-		  $.get(url, { command:"volume", param:volume}, function(data){
-		  });
-		}
-	});
-
-	$("#volume-up").click(function(){
-		if(volume < 100) {
-			volume = volume + 10;
-		  $.get(url, { command:"volume", param:volume}, function(data){
-		  });
-		}
-	});	
 			 
 });

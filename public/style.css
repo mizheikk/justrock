@@ -2,6 +2,12 @@ body {
 	background-color:#ffffff;
 }
 
+div{padding:5px;}
+
+#searchQuery {
+  width:250px;
+}
+
 h1{
 	color:#78AC07;
 }

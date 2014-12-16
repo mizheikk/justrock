@@ -20,9 +20,20 @@
     <![endif]-->
   </head>
   <body>
-		<div class="container">
-			<div>
-				<h1>Just Rock!!</h1>
+		<div class="container-fluid">
+			<div class="row">
+			<div class="col-xs-16">
+		    <h1>Just Rock!!</h1>
+		  </div>
+		  <div class="col-xs-6 col-sm-4">
+		    <div>
+		      <input id="searchQuery" class="form-control" placeholder="Search Tracks"></input>
+		      <button id="searchButton" class="btn btn-default">Search</button>
+		      <div id="searchResult"> </div>
+		    </div>
+		  </div>	  
+		  <div class="col-xs-6 col-sm-4">
+			  <div>
 				<button id="step-backward" type="button" class="btn btn-default btn-lg" aria-label="Left Align">
 					<span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span>
 				</button>
@@ -35,17 +46,19 @@
 				<button id="step-forward" type="button" class="btn btn-default btn-lg" aria-label="Left Align">
 					<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span>
 				</button>
+				<!--
 				<button id="volume-down" type="button" class="btn btn-default btn-lg" aria-label="Left Align">
 					<span class="glyphicon glyphicon-volume-down" aria-hidden="true"></span>
 				</button>	
 				<button id="volume-up" type="button" class="btn btn-default btn-lg" aria-label="Left Align">
 					<span class="glyphicon glyphicon-volume-up" aria-hidden="true"></span>
 				</button>
-			
-													
+				-->													
 			</div>
-			<div>
+		    <div>
 				<p id="info"></p>
+			</div>		  
+		  </div>
 			</div>
 		</div>
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
