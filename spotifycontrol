@@ -3,7 +3,7 @@ on run argv
 
 	set appName to "Spotify Controller"
 	set appLanguage to "AppleScript"	
-	set appVersion to "0.5"
+	set appVersion to "0.6"
 	set targetOS to "OS X"	
 
   if count of argv is equal to 0 then
@@ -14,12 +14,12 @@ on run argv
     set msg to msg & "    \"OS\":\"" & targetOS & "\",\n"      
     set msg to msg & "    \"language\":\"" & appLanguage & "\"\n"      
     set msg to msg & "   },\n"    
-    set msg to msg & "  \"commands\": [{ \n"
-    set msg to msg & "    \"play\":\"null\",\n"
+    set msg to msg & "  \"command\": [{ \n"
+    set msg to msg & "    \"play\":\"param uri/null\",\n"
     set msg to msg & "    \"pause\":\"null\",\n"
     set msg to msg & "    \"next\":\"null\",\n"
     set msg to msg & "    \"previous\":\"null\",\n"            
-    set msg to msg & "    \"volume\":\"int 0-100\",\n"   
+    set msg to msg & "    \"volume\":\"param int 0-100\",\n"   
     set msg to msg & "    \"info\":\"null\"\n" 
     set msg to msg & "   }] \n"      
     set msg to msg & "}\n"
@@ -32,21 +32,31 @@ on run argv
 	if command is equal to "play" then
 	  if count of argv is equal to 1 then
 	    tell application "Spotify" to play
+	    return 200
 	  else
 	    set uri to item 2 of argv
 	    tell application "Spotify" to play track uri
+	    return 200
 	  end if  
 	else if command is equal to "pause" then
 	  tell application "Spotify" to pause
+	  return 200
 	else if command is equal to "previous" then
 	  tell application "Spotify" to previous track
+	  return 200
 	else if command is equal to "next" then
 	  tell application "Spotify" to next track
+	  return 200
 	else if command is equal to "volume" then
-	  set newVolume to item 2 of argv
-	    tell application "Spotify" 
+	  if count of argv is equal to 2 then
+	    set newVolume to item 2 of argv
+	    tell application "Spotify"
 	      set sound volume to newVolume
 	    end tell
+	    return 200
+	  else
+	    return 400
+	  end if 
 	else if command is equal to "info" then
 	  tell application "Spotify"
 	  
@@ -104,7 +114,9 @@ on run argv
 	    set info to info & "}\n"	       		
 	  end tell
 	  return info
-	end if 
+	end if
+	
+	return 400
 	
 	end using terms from
 end run

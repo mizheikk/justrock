@@ -1,18 +1,16 @@
 $( document ).ready(function() {
  	
- 	var url = "http://localhost:8080/command"; 	
+ 	var url = window.location.protocol+"/api"; 	
+ 	var trackInfo;
  	
- 	/*
- 	function getInfo() {
+ 	function updateTrackInfo() {
     $.get(url, { command:"info"}, function(data){
       var info = $.parseJSON(data);
-      console.log(info.soundVolume);
-      return info;
+			trackInfo = data;
     });			
   }
-  */
   
-	$("#searchButton").click(function(){	
+	$("#searchButton").click(function search(){	
 	
 	  $("#searchResult").html("");
 	
@@ -22,7 +20,7 @@ $( document ).ready(function() {
 			  q: $("#searchQuery").val(),
 				type: 'track'
 			},
-			success: function (response) {
+			success: function searchSuccess(response) {
 			  var results = response.tracks.items;
 			  for( i=0; i<results.length; i++) {
 					var uri = response.tracks.items[i].uri;
@@ -38,23 +36,23 @@ $( document ).ready(function() {
 	  });	  		
 	});
   
-	$(document).on("click", '.resultLink', function(e) {
+	$(document).on("click", '.resultLink', function playTrack(e) {
 		$.get(url, { command:"play", param:e.target.id});
 	});	
 
-	$("#step-backward").click(function(){
+	$("#step-backward").click(function stepBackward(){
 		$.get(url, { command:"previous"});
 	});	
 
-	$("#play").click(function(){
+	$("#play").click(function play(){
 		$.get(url, { command:"play"});
 	});	
 
-	$("#pause").click(function(){
+	$("#pause").click(function pause(){
 		$.get(url, { command:"pause"});
 	});	
 	
-	$("#step-forward").click(function(){
+	$("#step-forward").click(function stepForward(){
 		$.get(url, { command:"next"});
 	});		
 			 

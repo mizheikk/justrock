@@ -10,7 +10,7 @@ server.listen(port, function() {
     console.log('server listening on port ' + port);
 });
 
-server.get('/command', function(req,res) {
+server.get('/api', function(req,res) {
 
   var command = req.query.command;
   var param = req.query.param;
@@ -45,4 +45,3 @@ function isValid(command, param) {
 		
 	return true;
 }
-
