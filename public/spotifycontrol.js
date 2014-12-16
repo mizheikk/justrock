@@ -13,6 +13,9 @@ $( document ).ready(function() {
   */
   
 	$("#searchButton").click(function(){	
+	
+	  $("#searchResult").html("");
+	
 	  $.ajax({
 		  url: 'https://api.spotify.com/v1/search',
 			data: {
@@ -24,7 +27,12 @@ $( document ).ready(function() {
 			  for( i=0; i<results.length; i++) {
 					var uri = response.tracks.items[i].uri;
 					var name = response.tracks.items[i].name;
-					$( "#searchResult" ).append( '<a href="#" class="resultLink" id="' + uri + '">'+ name +'</a> <br/>' );
+					var artist = [];
+					
+					for(var j=0; j<response.tracks.items[i].artists.length; j++) {
+					  artist[j] = response.tracks.items[i].artists[j].name;
+					  $("#searchResult").append( '<a href="#" class="resultLink" id="' + uri + '">'+ name + " <b>by</b> "+artist[j]+'</a> <br/>' );
+					}
 			  }   
 			}
 	  });	  		
