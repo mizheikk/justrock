@@ -1,6 +1,6 @@
 $( document ).ready(function() {
  	
- 	var url = window.location.protocol+"/api"; 	
+ 	var url = window.location.origin+"/api"; 	
  	var trackInfo;
  	
  	function updateTrackInfo() {
@@ -16,6 +16,8 @@ $( document ).ready(function() {
 	
 	  $.ajax({
 		  url: 'https://api.spotify.com/v1/search',
+		  cache: false,
+		  crossDomain: true,
 			data: {
 			  q: $("#searchQuery").val(),
 				type: 'track'
