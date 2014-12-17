@@ -1,6 +1,33 @@
 $( document ).ready(function() {
  	
  	var url = window.location.origin+"/api"; 	
+  
+	function setTrackInfo(id) {	  
+    var trackId;
+    //trimmaa virheellisen id:n 
+    if( id.search("spotify:track:") != -1) {
+      trackId = id.replace("spotify:track:", "");
+    } else {
+      trackId = id;
+    } 
+	
+    $.get("https://api.spotify.com/v1/tracks/"+trackId, {}, function(data) {
+      console.log(data);
+      var name = data.album.name;
+      var image = data.album.images[1].url;
+      var artists = [];
+      for(var i=0; i<data.artists.length; i++) {
+        artists[i] = data.artists[i].name;
+      }	
+      
+      $("#infoScreen").html( "<img src='"+image+"'/>" +
+                             "<p>"+name+"</p>");
+      for(var i=0; i<artists.length; i++) {                       
+        $("#infoScreen").append("<p>"+artists[i]+" </p>");                      
+      }                       
+      
+    });
+	}	
 	
 	function setVolume(direction) {
     $.get(url, { command:"info"}, function(data) {
@@ -28,7 +55,7 @@ $( document ).ready(function() {
 			},
 			success: function searchSuccess(response) {
 			  var results = response.tracks.items;
-			  for( i=0; i<results.length; i++) {
+			  for(var i=0; i<results.length; i++) {
 					var uri = response.tracks.items[i].uri;
 					var name = response.tracks.items[i].name;
 					var artist = [];
@@ -44,6 +71,7 @@ $( document ).ready(function() {
   
 	$(document).on("click", '.resultLink', function playTrack(e) {
 		$.get(url, { command:"play", param:e.target.id});
+		setTrackInfo(e.target.id);
 	});	
 
 	$("#step-backward").click(function stepBackward(){
@@ -52,6 +80,7 @@ $( document ).ready(function() {
 
 	$("#play").click(function play(){
 		$.get(url, { command:"play"});
+		setTrackInfo("0eGsygTp906u18L0Oimnem");
 	});	
 
 	$("#pause").click(function pause(){
