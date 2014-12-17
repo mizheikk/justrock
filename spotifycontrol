@@ -103,7 +103,7 @@ on run argv
 	    set info to info & "   \"trackUrl\":\"" & _trackUrl & "\",\n"	    	    
 
 			#set info to info & "   \"currentTrack\":\"" & _currentTrack & "\",\n"
-			set info to info & "   \"soundVolume\":\"" & _soundVolume & "\",\n"
+			set info to info & "   \"soundVolume\":" & _soundVolume & ",\n"
 			set info to info & "   \"playerState\":\"" & _playerState & "\",\n"  
 			set info to info & "   \"playerPosition\":\"" & _playerPosition & "\",\n"
 			set info to info & "   \"repeatingEnabled\":\"" & _repeatingEnabled & "\",\n"

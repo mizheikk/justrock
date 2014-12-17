@@ -4,10 +4,10 @@ body {
 
 div{padding:5px;}
 
-#searchQuery {
+#searchQuery, #searchButton {
   width:250px;
 }
 
-h1{
-	color:#78AC07;
+.btn-default, h1{
+
 }

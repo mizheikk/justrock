@@ -1,14 +1,18 @@
 $( document ).ready(function() {
  	
  	var url = window.location.origin+"/api"; 	
- 	var trackInfo;
- 	
- 	function updateTrackInfo() {
-    $.get(url, { command:"info"}, function(data){
+	
+	function setVolume(direction) {
+    $.get(url, { command:"info"}, function(data) {
       var info = $.parseJSON(data);
-			trackInfo = data;
-    });			
-  }
+      var soundVolume = info.soundVolume;
+				if(direction)
+				  soundVolume += 5;
+				else
+				  soundVolume -= 5;
+      $.get(url, { command:"volume", param:soundVolume});
+    });	
+	}	
   
 	$("#searchButton").click(function search(){	
 	
@@ -56,6 +60,13 @@ $( document ).ready(function() {
 	
 	$("#step-forward").click(function stepForward(){
 		$.get(url, { command:"next"});
-	});		
-			 
+	});
+	
+	$("#volume-up").click( function(){
+		setVolume(1);
+	});
+	
+	$("#volume-down").click( function(){
+	  setVolume(0);	
+	});	 
 });
