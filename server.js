@@ -21,6 +21,7 @@ server.get('/api', function(req,res) {
   	param = "";
 
   // Välitetään Spotifylle komento
+  console.log(command);
 	if( isValid(command, param) ) {				
 		exec('spotifycontrol ' + command + " " + param, function(err,stdout) {
 			if(err) {
@@ -40,7 +41,7 @@ function isValid(command, param) {
 		return false;
 
 	// hyväksyy: command a-z ja param a-Z sekä 0-9	
-	if(command.search(/[^a-z]/) > -1 || param.search(/[^a-z|^0-9|^:]/i) > -1)
+	if(command.search(/[^a-z]/i) > -1 || param.search(/[^a-z|^0-9|^:]/i) > -1)
 		return false;
 		
 	return true;
