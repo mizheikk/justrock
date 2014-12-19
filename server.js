@@ -11,7 +11,7 @@ server.listen(port, function() {
 });
 
 server.get('/api', function(req,res) {
-
+  res.contentType('application/json');
   var command = req.query.command;
   var param = req.query.param;
   
@@ -21,7 +21,6 @@ server.get('/api', function(req,res) {
   	param = "";
 
   // Välitetään Spotifylle komento
-  console.log(command);
 	if( isValid(command, param) ) {				
 		exec('spotifycontrol ' + command + " " + param, function(err,stdout) {
 			if(err) {

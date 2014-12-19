@@ -8,6 +8,8 @@ div{padding:5px;}
   width:250px;
 }
 
+#clock {width:10px; height:20px;}
+
 .btn-default, h1{
 
 }

@@ -36,32 +36,33 @@ on run argv
 	      play
 	      set _id to id of current track
 	    end tell
-	    return _id  
+	    return "{ \"trackId\":\"" & _id & "\" }"
 	  else
 	    set uri to item 2 of argv
 	    tell application "Spotify" 
 	      play track uri
 	      set _id to id of current track
 	    end tell
-	    return _id
+	    return "{ \"trackId\":\"" & _id & "\" }"
 	  end if  
 	  
 	else if command is equal to "pause" then
 	  tell application "Spotify" to pause
+	  return "{}"
 	  
 	else if command is equal to "previous" then
 	  tell application "Spotify" 
 	    previous track
 	    set _id to id of current track
     end tell
-    return _id
+    return "{ \"trackId\":\"" & _id & "\" }"
     
 	else if command is equal to "next" then
 	  tell application "Spotify"
 	    next track
 	    set _id to id of current track
 	  end tell
-	  return _id
+	  return "{ \"trackId\":\"" & _id & "\" }"
 	  
 	else if command is equal to "volume" then
 	  if count of argv is equal to 2 then

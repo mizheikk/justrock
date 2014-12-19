@@ -1,16 +1,26 @@
 $( document ).ready(function() {
  	
  	var url = window.location.origin+"/api";
+
+  updateInfoScreen();
  	
- 	function setUpdateTimer(time) {
- 		setTimeout(function(){
- 		  $.get(url, { command:"getId"}, function(data){
-		    setTrackInfo(data);  
-		  });			  
- 		}, time + 2000)
- 	}		
+ 	function updateTimer(time) {
+    setTimeout(function() {
+      updateInfoScreen()
+    }, time + 1000);
+ 	}
+
+  function getInfoFromPlayer() {
+    return $.ajax({
+      url : url,
+      type: 'GET',
+      data:{
+           command : "info"
+      } 
+    });
+  }
   
-	function setTrackInfo(id) {	  
+  function getInfoFromSpotify(id) {
     var trackId;
     //trimmaa virheellisen id:n 
     if( id.search("spotify:track:") != -1) {
@@ -18,41 +28,67 @@ $( document ).ready(function() {
     } else {
       trackId = id;
     } 
-	
-    $.get("https://api.spotify.com/v1/tracks/"+trackId, {}, function(data) {
-      console.log(data);
-      var name = data.name;
-      var albumName = data.album.name;
-      var image = data.album.images[1].url;
-      var artists = [];
       
-      setUpdateTimer(data.duration_ms);
+    return $.ajax({
+      url : "https://api.spotify.com/v1/tracks/"+trackId,
+      type: 'GET',
+    });
+  }
+
+  var playerPosition = 0;
+  var duration = 0;  
+  var timer = setInterval(function () {clock()}, 1000);
+  
+  function clock() {
+      playerPosition++;
+      var output = (duration - playerPosition);
+      if(output>0) {
+        //$("#play").html(output);
+      }
+  }
+
+  function updateInfoScreen() {
+    var playerData = getInfoFromPlayer();
+    
+    playerData.done(function(data) {
+      var trackId = data.trackId;
+      duration = Math.round(data.duration);
+      playerPosition = Math.round(data.playerPosition.replace(",",".")); //korjaa , -> .
+      var time = duration - playerPosition;
       
-      for(var i=0; i<data.artists.length; i++) {
-        artists[i] = data.artists[i].name;
-      }	
+      getInfoFromSpotify(trackId).done( function(data) {
+	      var name = data.name;
+        var albumName = data.album.name;
+        var image = data.album.images[1].url;
+        var artists = [];
       
-      $("#infoScreen").html( "<img src='"+image+"'/>" +
+        for(var i=0; i<data.artists.length; i++) {
+          artists[i] = data.artists[i].name;
+        }	
+      
+        $("#infoScreen").html( "<img src='"+image+"'/>" +
                              "<p>"+name+"</p>" +
                              "<p>"+albumName+"</p>");
-      for(var i=0; i<artists.length; i++) {                       
-        $("#infoScreen").append("<p>"+artists[i]+" </p>");                      
-      }                       
-      
+        for(var i=0; i<artists.length; i++) {                       
+          $("#infoScreen").append("<p>"+artists[i]+" </p>");                      
+        }
+        
+        updateTimer(time);
+        clock();          
+	    });
     });
-	}	
-	
+  }
+  
 	function setVolume(direction) {
-    $.get(url, { command:"info"}, function(data) {
-      var info = $.parseJSON(data);
-      var soundVolume = info.soundVolume;
-				if(direction)
-				  soundVolume += 5;
-				else
-				  soundVolume -= 5;
-      $.get(url, { command:"volume", param:soundVolume});
-    });	
-	}	
+	  getInfoFromPlayer().done( function(data) {
+	  	soundVolume = data.soundVolume;
+			if(direction)
+			  soundVolume += 5;
+			else
+			  soundVolume -= 5;
+      $.get(url, { command:"volume", param:soundVolume});	  	
+	  });
+	}
   
 	$("#searchButton").click(function search(){	 
 	  $.get("https://api.spotify.com/v1/search", { q:$("#searchQuery").val(), type:"track"}, function(response){
@@ -69,40 +105,40 @@ $( document ).ready(function() {
 					}
 			  }   
 		});
-	});
-  
+	});    
+
 	$(document).on("click", '.resultLink', function playTrack(e) {
 		$.get(url, { command:"play", param:e.target.id});
-		setTrackInfo(e.target.id);
+		updateInfoScreen();
 	});	
 
 	$("#step-backward").click(function stepBackward(){
 		$.get(url, { command:"previous"}, function(data){
-		setTrackInfo(data);
+		  updateInfoScreen();
 		});		
 	});	
 
 	$("#play").click(function play(){
-		$.get(url, { command:"play"}, function(data){
-		setTrackInfo(data);
-		});
+		$.get(url, { command:"play"});
+		updateInfoScreen();
 	});
 
 	$("#pause").click(function pause(){
 		$.get(url, { command:"pause"});
+		clearInterval(clock);
 	});	
 	
 	$("#step-forward").click(function stepForward(){
 		$.get(url, { command:"next"}, function(data){
-		setTrackInfo(data);
+		  updateInfoScreen();
 		});		
 	});
 	
 	$("#volume-up").click( function(){
 		setVolume(1);
 	});
-	
+
 	$("#volume-down").click( function(){
 	  setVolume(0);	
-	});	 
+	});
 });
