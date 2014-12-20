@@ -3,14 +3,9 @@ $( document ).ready(function() {
  	var url = window.location.origin+"/api";
 
   updateInfoScreen();
- 	
- 	function updateTimer(time) {
-    setTimeout(function() {
-      updateInfoScreen()
-    }, time + 1000);
- 	}
 
   function getInfoFromPlayer() {
+    console.log("infoa soittimelta");
     return $.ajax({
       url : url,
       type: 'GET',
@@ -21,6 +16,7 @@ $( document ).ready(function() {
   }
   
   function getInfoFromSpotify(id) {
+    console.log("infoa spotifyltä");
     var trackId;
     //trimmaa virheellisen id:n 
     if( id.search("spotify:track:") != -1) {
@@ -40,11 +36,24 @@ $( document ).ready(function() {
   var timer = setInterval(function () {clock()}, 1000);
   
   function clock() {
-      playerPosition++;
-      var output = (duration - playerPosition);
-      if(output>0) {
-        //$("#play").html(output);
+    playerPosition++;
+    var output = (duration - playerPosition);
+    
+    if(output>0) {
+      var min = 0;
+      var sek = 0;
+      var i = output;
+      	
+      while( i > 60 ) {
+      	min++;
+      	i = i - 60;
       }
+      sek = i;      	
+      $("#play").html(min+":"+sek);
+    }
+    else {
+      updateInfoScreen();
+    }
   }
 
   function updateInfoScreen() {
@@ -72,8 +81,7 @@ $( document ).ready(function() {
         for(var i=0; i<artists.length; i++) {                       
           $("#infoScreen").append("<p>"+artists[i]+" </p>");                      
         }
-        
-        updateTimer(time);
+        console.log(time);
         clock();          
 	    });
     });
@@ -109,7 +117,9 @@ $( document ).ready(function() {
 
 	$(document).on("click", '.resultLink', function playTrack(e) {
 		$.get(url, { command:"play", param:e.target.id});
-		updateInfoScreen();
+		setTimeout( function() {
+		  updateInfoScreen();
+		}, 2000)
 	});	
 
 	$("#step-backward").click(function stepBackward(){
