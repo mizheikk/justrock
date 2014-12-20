@@ -49,7 +49,10 @@ $( document ).ready(function() {
       	i = i - 60;
       }
       sek = i;      	
-      $("#play").html(min+":"+sek);
+      if(sek<10)
+        $("#play").html(min+":0"+sek);
+      else
+        $("#play").html(min+":"+sek);
     }
     else {
       updateInfoScreen();
@@ -130,12 +133,13 @@ $( document ).ready(function() {
 
 	$("#play").click(function play(){
 		$.get(url, { command:"play"});
+		timer = setInterval(function () {clock()}, 1000);
 		updateInfoScreen();
 	});
 
 	$("#pause").click(function pause(){
 		$.get(url, { command:"pause"});
-		clearInterval(clock);
+		clearInterval(timer);
 	});	
 	
 	$("#step-forward").click(function stepForward(){
