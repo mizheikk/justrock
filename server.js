@@ -1,7 +1,7 @@
 var express = require('express');
 var sys = require('sys');
-var exec = require('child_process').exec;
- 
+var spotify = require('./spotify_controller');
+
 var server = express();
 server.use(express.static(__dirname + '/public/'));
 
@@ -22,12 +22,8 @@ server.get('/api', function(req,res) {
 
   // Välitetään Spotifylle komento
 	if( isValid(command, param) ) {				
-		exec('spotifycontrol ' + command + " " + param, function(err,stdout) {
-			if(err) {
-				res.send(err);
-			}		
-			res.send(stdout);
-		});
+		controller = spotify.get_spotify()
+		controller.call(command, param)
 	}
 	else 
 		res.send("False command.");  
